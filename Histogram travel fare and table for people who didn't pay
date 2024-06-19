@@ -1,0 +1,26 @@
+# Load libraries
+library(ggplot2)
+library(dplyr) 
+
+# Read the dataset
+titanic_data <- read.csv("titanic.csv")
+
+# Remove rows with missing fare information (if any)
+titanic_data <- titanic_data[complete.cases(titanic_data$Fare), ]
+
+# Histogram of travel fare
+fare_histogram <- ggplot(titanic_data, aes(x = Fare)) +
+  geom_histogram(binwidth = 10, fill = "lightgreen", color = "black") +
+  labs(title = "Distribution of Travel Fare", x = "Fare", y = "Count") +
+  theme_minimal()
+
+# Save histogram
+ggsave("fare_histogram.png", plot = fare_histogram, width = 8, height = 6, units = "in")
+
+# Table showing number of people who did not pay (fare = 0)
+people_not_paid <- titanic_data %>%
+  filter(Fare == 0) %>%
+  summarise(count = n())
+
+# Print table
+print(people_not_paid)
