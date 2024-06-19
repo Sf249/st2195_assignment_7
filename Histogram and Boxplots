@@ -1,0 +1,34 @@
+# Load libraries
+library(ggplot2)
+
+# Read the dataset
+titanic_data <- read.csv("titanic.csv")
+
+# Histogram of passengers' age
+age_histogram <- ggplot(titanic_data, aes(x = Age)) +
+  geom_histogram(binwidth = 5, fill = "lightblue", color = "black") +
+  labs(title = "Distribution of Passengers' Age", x = "Age", y = "Count") +
+  theme_minimal()
+
+# Save histogram
+ggsave("age_histogram.png", plot = age_histogram, width = 8, height = 6, units = "in")
+
+# Boxplot of age per ticket class
+age_boxplot_class <- ggplot(titanic_data, aes(x = factor(Pclass), y = Age, fill = factor(Pclass))) +
+  geom_boxplot() +
+  labs(title = "Age Distribution by Ticket Class", x = "Ticket Class", y = "Age") +
+  scale_fill_discrete(name = "Ticket Class") +
+  theme_minimal()
+
+# Save boxplot by ticket class
+ggsave("age_boxplot_class.png", plot = age_boxplot_class, width = 8, height = 6, units = "in")
+
+# Boxplot of age based on survival
+age_boxplot_survival <- ggplot(titanic_data, aes(x = factor(Survived), y = Age, fill = factor(Survived))) +
+  geom_boxplot() +
+  labs(title = "Age Distribution by Survival", x = "Survived", y = "Age") +
+  scale_fill_discrete(name = "Survived", labels = c("0" = "Did Not Survive", "1" = "Survived")) +
+  theme_minimal()
+
+# Save boxplot by survival
+ggsave("age_boxplot_survival.png", plot = age_boxplot_survival, width = 8, height = 6, units = "in")
