@@ -1,0 +1,33 @@
+# Load libraries
+library(ggplot2)
+library(dplyr)  # for data manipulation
+
+# Read the dataset
+titanic_data <- read.csv("titanic.csv")
+
+# Calculate family size (sum of SibSp and Parch)
+titanic_data <- titanic_data %>%
+  mutate(FamilySize = SibSp + Parch + 1)  # +1 to include the passenger themselves
+
+# Aggregate data by Ticket Class and Family Size
+family_size_per_class <- titanic_data %>%
+  group_by(Pclass, FamilySize) %>%
+  summarise(count = n()) %>%
+  ungroup() %>%
+  mutate(FamilySize = as.factor(FamilySize))  # Convert FamilySize
+
+# Plotting the stacked bar chart
+family_size_chart <- ggplot(family_size_per_class, aes(x = factor(Pclass), y = count, fill = FamilySize)) +
+  geom_bar(stat = "identity", position = "stack") +
+  labs(title = "Family Size Distribution per Ticket Class",
+       x = "Ticket Class",
+       y = "Count",
+       fill = "Family Size") +
+  scale_fill_viridis_d(option = "plasma", direction = -1) +  # color palette
+  theme_minimal()
+
+# Save the chart as PNG
+ggsave("family_size_per_class.png", plot = family_size_chart, width = 10, height = 6, units = "in")
+
+# Display the chart
+print(family_size_chart)
